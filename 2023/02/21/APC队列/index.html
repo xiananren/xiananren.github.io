@@ -1,0 +1,247 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>APC队列-滴水逆向观看笔记 | Xman</title><meta name="author" content="Xman"><meta name="copyright" content="Xman"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="APC队列主要结构体KAPC 其中：  类型是当前这个结构体对应的类型，比如线程，中断之类的 大小就是整个结构体的大小 目标线程，因为每个线程都有自己对应的apc双向链表，所以用这个来指定对应的线程 挂的位置是apc队列里的下标 KernelRoutine，就是指向一个ExFreePoolWithTag，用来释放APC函数的内存的 NormalRoutine 在用户层，指向的就是用户APC的总入口">
+<meta property="og:type" content="article">
+<meta property="og:title" content="APC队列-滴水逆向观看笔记">
+<meta property="og:url" content="https://xiananren.github.io/2023/02/21/APC%E9%98%9F%E5%88%97/index.html">
+<meta property="og:site_name" content="Xman">
+<meta property="og:description" content="APC队列主要结构体KAPC 其中：  类型是当前这个结构体对应的类型，比如线程，中断之类的 大小就是整个结构体的大小 目标线程，因为每个线程都有自己对应的apc双向链表，所以用这个来指定对应的线程 挂的位置是apc队列里的下标 KernelRoutine，就是指向一个ExFreePoolWithTag，用来释放APC函数的内存的 NormalRoutine 在用户层，指向的就是用户APC的总入口">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221221947289.png">
+<meta property="article:published_time" content="2023-02-21T14:25:14.113Z">
+<meta property="article:modified_time" content="2023-02-21T14:21:13.223Z">
+<meta property="article:author" content="Xman">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221221947289.png"><link rel="shortcut icon" href="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221135524334.png"><link rel="canonical" href="https://xiananren.github.io/2023/02/21/APC%E9%98%9F%E5%88%97/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'APC队列-滴水逆向观看笔记',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-21 22:21:13'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Xman" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://pic.imgdb.cn/item/63f38a68f144a010071d33b2.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221221947289.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Xman"><span class="site-name">Xman</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">APC队列-滴水逆向观看笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-02-21T14:25:14.113Z" title="发表于 2023-02-21 22:25:14">2023-02-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-02-21T14:21:13.223Z" title="更新于 2023-02-21 22:21:13">2023-02-21</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="APC队列-滴水逆向观看笔记"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="APC队列"><a href="#APC队列" class="headerlink" title="APC队列"></a>APC队列</h1><h2 id="主要结构体"><a href="#主要结构体" class="headerlink" title="主要结构体"></a>主要结构体</h2><h3 id="KAPC"><a href="#KAPC" class="headerlink" title="KAPC"></a>KAPC</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818085811024.png" alt="image-20220818085811024"></p>
+<p>其中：</p>
+<ul>
+<li>类型是当前这个结构体对应的类型，比如线程，中断之类的</li>
+<li>大小就是整个结构体的大小</li>
+<li>目标线程，因为每个线程都有自己对应的apc双向链表，所以用这个来指定对应的线程</li>
+<li>挂的位置是apc队列里的下标</li>
+<li>KernelRoutine，就是指向一个ExFreePoolWithTag，用来释放APC函数的内存的</li>
+<li><strong>NormalRoutine</strong> 在用户层，指向的就是用户APC的<strong>总入口</strong>；在内核层，就是指向内核的APC函数的地址、</li>
+<li>NormalContext  内核中的话是空，用户中的话是真正的APC函数。</li>
+<li><strong>ApcStateIndex</strong> 挂哪个队列，之后重点讲</li>
+<li>ApcMode是内核或用户的apc</li>
+<li>Inserted指是否插入队列</li>
+</ul>
+<h3 id="KeInitializeApc"><a href="#KeInitializeApc" class="headerlink" title="KeInitializeApc"></a>KeInitializeApc</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818092137920.png" alt="image-20220818092137920"></p>
+<p>作用是分配空间，初始化KAPC结构体</p>
+<ul>
+<li>第一个参数是KAPC指针，3环调用中上一个函数NtQueueApcThread就是分配了一个KAPC的空间，但是未初始化，然后传给我们这个函数来进行初始化</li>
+<li>目标线程会挂到KAPC里的当前线程那儿</li>
+<li>第三个是挂到哪儿</li>
+<li>第四个是销毁KAPC的函数地址，和KAPC里的KernelRoutine是一样的，这里会传到KAPC里的那个元素里去</li>
+<li>下面几个都和KAPC里的是一样的</li>
+</ul>
+<h3 id="KAPC-STATE"><a href="#KAPC-STATE" class="headerlink" title="KAPC_STATE"></a>KAPC_STATE</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220819224849964.png" alt="image-20220819224849964"></p>
+<h2 id="主要成员"><a href="#主要成员" class="headerlink" title="主要成员"></a>主要成员</h2><h3 id="ApcQueueable"><a href="#ApcQueueable" class="headerlink" title="ApcQueueable"></a>ApcQueueable</h3><p>代表能否在Apc队列中插入Apc</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220820001022342.png" alt="image-20220820001022342"></p>
+<p>当前线程在执行退出代码时，会将该值设为0，意思是退出的时候不用插入，插入也没用。</p>
+<h3 id="ApcStateIndex（KAPC）"><a href="#ApcStateIndex（KAPC）" class="headerlink" title="ApcStateIndex（KAPC）"></a>ApcStateIndex（KAPC）</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818093050689.png" alt="image-20220818093050689"></p>
+<p>SaveApcState指向的是挂靠之前的原APC的状态，这里可以保证当传入为0的时候肯定指向原ApcState</p>
+<p>index为2的时候，就是初始化KAPC的时候将当时的一个环境赋值到ApcState中，index为3的时候就是插入的时候再检查然后赋值。</p>
+<h3 id="Alertable（KTHREAD）"><a href="#Alertable（KTHREAD）" class="headerlink" title="Alertable（KTHREAD）"></a>Alertable（KTHREAD）</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818105141679.png" alt="image-20220818105141679"></p>
+<p>如果调用sleep或者wait。。。object的话不会改变alertable，但是后面加ex可以改变。</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818105448687.png" alt="image-20220818105448687"></p>
+<h2 id="主要函数"><a href="#主要函数" class="headerlink" title="主要函数"></a>主要函数</h2><h3 id="SwapContext"><a href="#SwapContext" class="headerlink" title="SwapContext"></a>SwapContext</h3><p>用于线程切换</p>
+<h3 id="KiServiceExit"><a href="#KiServiceExit" class="headerlink" title="KiServiceExit"></a>KiServiceExit</h3><p>是系统调用，异常或中断返回用户空间的必进函数</p>
+<h3 id="KiDeliverApc"><a href="#KiDeliverApc" class="headerlink" title="KiDeliverApc"></a>KiDeliverApc</h3><h4 id="内核执行流程"><a href="#内核执行流程" class="headerlink" title="内核执行流程"></a>内核执行流程</h4><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818111726263.png" alt="image-20220818111726263"></p>
+<h4 id="用户层执行流程"><a href="#用户层执行流程" class="headerlink" title="用户层执行流程"></a>用户层执行流程</h4><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818121812543.png" alt="image-20220818121812543"></p>
+<p>执行apc函数的一个函数 </p>
+<h3 id="KiInsertQueueApc"><a href="#KiInsertQueueApc" class="headerlink" title="KiInsertQueueApc"></a>KiInsertQueueApc</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818093739723.png" alt="image-20220818093739723"></p>
+<p>真正的将KAPC插入指定APC队列的一个函数</p>
+<p>其中最后一步，要是是成功插入了一个内核的APC，直接将KernelApcPending置1，就是说明有内核APC需要执行，而如果是用户的APC的话需要进行下面的三个判断，全部满足才会置UserApcPending为1.所以这里，虽然apc可能插入队列里，但是可能不会执行对应的apc函数</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818104710932.png" alt="image-20220818104710932"></p>
+<p>下面有堆alertable的详细解释</p>
+<h3 id="KiInitializeUserApc"><a href="#KiInitializeUserApc" class="headerlink" title="KiInitializeUserApc"></a>KiInitializeUserApc</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818122627234.png" alt="image-20220818122627234"></p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220816230539327.png" alt="image-20220816230539327"></p>
+<p>从0环切换到3环的时候，他要去执行对应的3环的一个apc函数。而因为0环和3环的堆栈并不是一个堆栈，而切换到三环后，Frame本身是存储的进入0环时的一个寄存器信息，而回到3环执行apc函数时ip并不是Frame里存储的ip，而是apc函数对应的地址，所以这里涉及到一个换栈，且涉及到一个备份寄存器的一个操作。</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220816231707236.png" alt="image-20220816231707236"></p>
+<p>具体流程如上图</p>
+<p>会先将这个context结构体里的信息复制到3环的堆栈里去，然后讲上方的四个参数同样复制进去，随后修改esp，再修改eip，让他指向ntdll.KiUserApcDispatcher,让程序从内核跳到用户态然后从KiUserApcDispatcher开始执行。ntdll.KiUserApcDispatcher的值在系统启动的时候已经赋值好了</p>
+<h3 id="ntdll-KiUserApcDispatcher"><a href="#ntdll-KiUserApcDispatcher" class="headerlink" title="ntdll.KiUserApcDispatcher"></a>ntdll.KiUserApcDispatcher</h3><p>执行这个的时候，代表已经从0环回到3环了</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220816232409534.png" alt="image-20220816232409534"></p>
+<h2 id="初探"><a href="#初探" class="headerlink" title="初探"></a>初探</h2><p>线程无法<strong>被</strong>杀掉，挂起，恢复，线程执行的时候是自己占有的CPU，其他的无法干预它。如果不调用API，屏蔽中断，不出现异常，线程将一直运行下去，一直占据CPU，无法被杀掉，所以线程只能是自杀而不是他杀。</p>
+<p>想改变线程的行为，可以给他提供一个函数让他自己调用，就是APC，就是异步过程调用</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220819224552534.png" alt="image-20220819224552534"></p>
+<h2 id="备用APC调用"><a href="#备用APC调用" class="headerlink" title="备用APC调用"></a>备用APC调用</h2><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220819230427547.png" alt="image-20220819230427547"></p>
+<h3 id="进程挂靠"><a href="#进程挂靠" class="headerlink" title="进程挂靠"></a>进程挂靠</h3><p>a进程的线程t，可以通过修改Cr3，改为b进程的页目录基址，来访问b进程的地址空间，就是所谓进程挂靠</p>
+<h3 id="挂靠环境下的ApcState"><a href="#挂靠环境下的ApcState" class="headerlink" title="挂靠环境下的ApcState"></a>挂靠环境下的ApcState</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220820000506262.png" alt="image-20220820000506262"></p>
+<h2 id="3环的APC挂入过程"><a href="#3环的APC挂入过程" class="headerlink" title="3环的APC挂入过程"></a>3环的APC挂入过程</h2><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818091020717.png" alt="image-20220818091020717"></p>
+<p>如果在3环通过API调用APC的话，调用QueueUserApc，他真正调用的是NtQueueApcThread，然后调用了下面那几个函数</p>
+<p>重要的就俩标红的，一个是初始化KAPC结构体，一个是插入APC</p>
+<h2 id="0环的APC挂入过程"><a href="#0环的APC挂入过程" class="headerlink" title="0环的APC挂入过程"></a>0环的APC挂入过程</h2><p>直接调用上面的俩内核函数</p>
+<h2 id="内核层的APC执行过程"><a href="#内核层的APC执行过程" class="headerlink" title="内核层的APC执行过程"></a>内核层的APC执行过程</h2><p>调用SwapContext后，会在该函数里面进行判断</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818110026006.png" alt="image-20220818110026006"></p>
+<p>0代表只处理内核apc，1代表都要处理</p>
+<p>如果有内核apc直接执行就完事</p>
+<p>执行点有线程切换</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818111150926.png" alt="image-20220818111150926"></p>
+<p>还有0环返回3环的：系统调用，中断或者异常（KiServiceExit)。执行用户APC之前，先执行内核APC。</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818111946046.png" alt="image-20220818111946046"></p>
+<h2 id="用户层的APC执行过程"><a href="#用户层的APC执行过程" class="headerlink" title="用户层的APC执行过程"></a>用户层的APC执行过程</h2><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818112826900.png" alt="image-20220818112826900"></p>
+<h3 id="堆栈操作"><a href="#堆栈操作" class="headerlink" title="堆栈操作"></a>堆栈操作</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818113007238.png" alt="image-20220818113007238"></p>
+<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220819171143467.png" alt="image-20220819171143467"></p>
+<p>首先判断传入的第一个参数的值是不是1，如果是1才需要执行用户的APC然后看UserApcPending的值是否为1，为1就往下走，先赋值为0，代表接下来要调用用户层的apc。为0就跳走。</p>
+<p>接下来的减0c代表的是，当前挂入位置是KAPC的便宜0xc的位置，可以去看KAPC的结构体的0xc的偏移对应位置。</p>
+<p>然后调用KernelRoutine去释放KAPC内存空间，随后调用一个KiInitializeUserApc，这里是用户和内核的最大差别，因为内核只有一个栈，而用户得从3环到0环，栈是不一样的。所以这里无法直接调用用户的apc函数，而是要调用这个函数去换栈</p>
+<p>该函数里会调用下方的函数来将trap frame的内容复制到context里面</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818124429955.png" alt="image-20220818124429955"></p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818124646216.png" alt="image-20220818124646216"></p>
+<p>然后下方提取出3环的esp，取四字节对齐后，在0环中修改3环栈，减去0x2dc &#x3D; 2cc + 10个字节。</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220818124812981.png" alt="image-20220818124812981"></p>
+<p>因为原来esp指向的是蓝色的顶部，加2dc后刚好是context加四个参数的位置。于是esp提升至图的最上面。</p>
+<p>随后改变完context之后，跳到KiUserApcDispatcher，也就是代表正式返回r3。然后调用用户的apc，随后执行ZwContinue，返回内核层。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20220819223947810.png" alt="image-20220819223947810"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xiananren.github.io">Xman</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xiananren.github.io/2023/02/21/APC%E9%98%9F%E5%88%97/">https://xiananren.github.io/2023/02/21/APC%E9%98%9F%E5%88%97/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xiananren.github.io" target="_blank">Xman</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221221947289.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/21/%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F/" title=""><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info"></div></div></a></div><div class="next-post pull-right"><a href="/2023/02/21/Hook/" title="Hook-滴水逆向观看笔记"><img class="cover" src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221222300783.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Hook-滴水逆向观看笔记</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://pic.imgdb.cn/item/63f38a68f144a010071d33b2.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Xman</div><div class="author-info__description">Aurora逆向手，擅长坐牢</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">live a life</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#APC%E9%98%9F%E5%88%97"><span class="toc-number">1.</span> <span class="toc-text">APC队列</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">1.1.</span> <span class="toc-text">主要结构体</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#KAPC"><span class="toc-number">1.1.1.</span> <span class="toc-text">KAPC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KeInitializeApc"><span class="toc-number">1.1.2.</span> <span class="toc-text">KeInitializeApc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KAPC-STATE"><span class="toc-number">1.1.3.</span> <span class="toc-text">KAPC_STATE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E6%88%90%E5%91%98"><span class="toc-number">1.2.</span> <span class="toc-text">主要成员</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ApcQueueable"><span class="toc-number">1.2.1.</span> <span class="toc-text">ApcQueueable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ApcStateIndex%EF%BC%88KAPC%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">ApcStateIndex（KAPC）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Alertable%EF%BC%88KTHREAD%EF%BC%89"><span class="toc-number">1.2.3.</span> <span class="toc-text">Alertable（KTHREAD）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.</span> <span class="toc-text">主要函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SwapContext"><span class="toc-number">1.3.1.</span> <span class="toc-text">SwapContext</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KiServiceExit"><span class="toc-number">1.3.2.</span> <span class="toc-text">KiServiceExit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KiDeliverApc"><span class="toc-number">1.3.3.</span> <span class="toc-text">KiDeliverApc</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">内核执行流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%B1%82%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">用户层执行流程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KiInsertQueueApc"><span class="toc-number">1.3.4.</span> <span class="toc-text">KiInsertQueueApc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KiInitializeUserApc"><span class="toc-number">1.3.5.</span> <span class="toc-text">KiInitializeUserApc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ntdll-KiUserApcDispatcher"><span class="toc-number">1.3.6.</span> <span class="toc-text">ntdll.KiUserApcDispatcher</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E6%8E%A2"><span class="toc-number">1.4.</span> <span class="toc-text">初探</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%87%E7%94%A8APC%E8%B0%83%E7%94%A8"><span class="toc-number">1.5.</span> <span class="toc-text">备用APC调用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%8C%82%E9%9D%A0"><span class="toc-number">1.5.1.</span> <span class="toc-text">进程挂靠</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%82%E9%9D%A0%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84ApcState"><span class="toc-number">1.5.2.</span> <span class="toc-text">挂靠环境下的ApcState</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E7%8E%AF%E7%9A%84APC%E6%8C%82%E5%85%A5%E8%BF%87%E7%A8%8B"><span class="toc-number">1.6.</span> <span class="toc-text">3环的APC挂入过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0%E7%8E%AF%E7%9A%84APC%E6%8C%82%E5%85%A5%E8%BF%87%E7%A8%8B"><span class="toc-number">1.7.</span> <span class="toc-text">0环的APC挂入过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E5%B1%82%E7%9A%84APC%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-number">1.8.</span> <span class="toc-text">内核层的APC执行过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%B1%82%E7%9A%84APC%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-number">1.9.</span> <span class="toc-text">用户层的APC执行过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A0%86%E6%A0%88%E6%93%8D%E4%BD%9C"><span class="toc-number">1.9.1.</span> <span class="toc-text">堆栈操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B"><span class="toc-number">1.9.2.</span> <span class="toc-text">流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.9.3.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/02/21/PEB_TEB/" title="PEB_TEB-滴水逆向观看笔记"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221222609912.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PEB_TEB-滴水逆向观看笔记"/></a><div class="content"><a class="title" href="/2023/02/21/PEB_TEB/" title="PEB_TEB-滴水逆向观看笔记">PEB_TEB-滴水逆向观看笔记</a><time datetime="2023-02-21T14:28:15.677Z" title="发表于 2023-02-21 22:28:15">2023-02-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/02/21/%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F/" title="无题">无题</a><time datetime="2023-02-21T14:28:15.676Z" title="发表于 2023-02-21 22:28:15">2023-02-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/21/APC%E9%98%9F%E5%88%97/" title="APC队列-滴水逆向观看笔记"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221221947289.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="APC队列-滴水逆向观看笔记"/></a><div class="content"><a class="title" href="/2023/02/21/APC%E9%98%9F%E5%88%97/" title="APC队列-滴水逆向观看笔记">APC队列-滴水逆向观看笔记</a><time datetime="2023-02-21T14:25:14.113Z" title="发表于 2023-02-21 22:25:14">2023-02-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/21/Hook/" title="Hook-滴水逆向观看笔记"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221222300783.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hook-滴水逆向观看笔记"/></a><div class="content"><a class="title" href="/2023/02/21/Hook/" title="Hook-滴水逆向观看笔记">Hook-滴水逆向观看笔记</a><time datetime="2023-02-21T14:25:14.112Z" title="发表于 2023-02-21 22:25:14">2023-02-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/21/C++%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%20%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="c++异常处理学习笔记"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221221112516.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c++异常处理学习笔记"/></a><div class="content"><a class="title" href="/2023/02/21/C++%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%20%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="c++异常处理学习笔记">c++异常处理学习笔记</a><time datetime="2023-02-21T14:11:46.845Z" title="发表于 2023-02-21 22:11:46">2023-02-21</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Xman</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
