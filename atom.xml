@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2023-02-20T15:13:49.264Z</updated>
+  <updated>2023-02-21T04:28:39.777Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -15,6 +15,48 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="https://xiananren.github.io/2023/02/21/frida/"/>
+    <id>https://xiananren.github.io/2023/02/21/frida/</id>
+    <published>2023-02-21T04:28:44.370Z</published>
+    <updated>2023-02-21T04:28:39.777Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>MAS CRACKME3 分析笔记</title>
+    <link href="https://xiananren.github.io/2023/02/21/%E5%88%86%E6%9E%90%E8%AE%B0%E5%BD%95/"/>
+    <id>https://xiananren.github.io/2023/02/21/%E5%88%86%E6%9E%90%E8%AE%B0%E5%BD%95/</id>
+    <published>2023-02-21T04:27:42.352Z</published>
+    <updated>2023-02-21T04:27:21.845Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>游戏安全-手游安全技术入门 阅读笔记</title>
