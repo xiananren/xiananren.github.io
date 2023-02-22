@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>夏男人</title>
+  <title>Xman</title>
   
   
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
@@ -10,7 +10,7 @@
   <id>https://xiananren.github.io/</id>
   
   <author>
-    <name>Xman</name>
+    <name>夏男人</name>
     
   </author>
   
