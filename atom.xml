@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2023-10-11T14:12:37.890Z</updated>
+  <updated>2023-10-18T16:09:32.979Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>rust学习笔记</title>
+    <link href="https://xiananren.github.io/2023/10/18/rust%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>https://xiananren.github.io/2023/10/18/rust%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</id>
+    <published>2023-10-18T15:41:47.012Z</published>
+    <updated>2023-10-18T16:09:32.979Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="语言学习" scheme="https://xiananren.github.io/categories/%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>南京大学jyy os学习笔记</title>
