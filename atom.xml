@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2023-10-24T08:42:51.108Z</updated>
+  <updated>2023-11-20T16:02:19.023Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>unity游戏开发学习笔记</title>
+    <link href="https://xiananren.github.io/2023/11/20/unity%E5%AD%A6%E4%B9%A0/"/>
+    <id>https://xiananren.github.io/2023/11/20/unity%E5%AD%A6%E4%B9%A0/</id>
+    <published>2023-11-20T14:51:15.966Z</published>
+    <updated>2023-11-20T16:02:19.023Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="游戏开发" scheme="https://xiananren.github.io/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>rust学习笔记</title>
