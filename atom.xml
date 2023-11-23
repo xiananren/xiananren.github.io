@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2023-11-20T16:02:19.023Z</updated>
+  <updated>2023-11-23T09:14:02.525Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>binary ninja vscode远程调试bn脚本</title>
+    <link href="https://xiananren.github.io/2023/11/23/binary-ninja%E8%B0%83%E8%AF%95python%E8%84%9A%E6%9C%AC/"/>
+    <id>https://xiananren.github.io/2023/11/23/binary-ninja%E8%B0%83%E8%AF%95python%E8%84%9A%E6%9C%AC/</id>
+    <published>2023-11-23T08:58:45.154Z</published>
+    <updated>2023-11-23T09:14:02.525Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="debug" scheme="https://xiananren.github.io/categories/debug/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>unity游戏开发学习笔记</title>
