@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>miasm学习笔记 | Xman</title><meta name="author" content="Xman"><meta name="copyright" content="Xman"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="突出一个啥都想学啥都不会 安装就不细说，比较麻烦，主要是因为python版本高collections名字改了花了比较久时间改，其他的还好。环境是Ubuntu22.04+vscode远程调试 官网示例其实应该是官方blog，差不多 shellcode分析https:&#x2F;&#x2F;miasm.re&#x2F;blog&#x2F;2016&#x2F;01&#x2F;27&#x2F;re150.html用一个smc的程序来做示例  一看就是xor动态解密，但是这里">
+<meta property="og:type" content="article">
+<meta property="og:title" content="miasm学习笔记">
+<meta property="og:url" content="https://xiananren.github.io/2023/12/21/miasm%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Xman">
+<meta property="og:description" content="突出一个啥都想学啥都不会 安装就不细说，比较麻烦，主要是因为python版本高collections名字改了花了比较久时间改，其他的还好。环境是Ubuntu22.04+vscode远程调试 官网示例其实应该是官方blog，差不多 shellcode分析https:&#x2F;&#x2F;miasm.re&#x2F;blog&#x2F;2016&#x2F;01&#x2F;27&#x2F;re150.html用一个smc的程序来做示例  一看就是xor动态解密，但是这里">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20231221163847268.png">
+<meta property="article:published_time" content="2023-12-21T08:37:54.056Z">
+<meta property="article:modified_time" content="2023-12-30T14:56:49.332Z">
+<meta property="article:author" content="Xman">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20231221163847268.png"><link rel="shortcut icon" href="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221135524334.png"><link rel="canonical" href="https://xiananren.github.io/2023/12/21/miasm%E5%AD%A6%E4%B9%A0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'miasm学习笔记',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-12-30 22:56:49'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Xman" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://pic.imgdb.cn/item/63f38a68f144a010071d33b2.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20231221163847268.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Xman"><span class="site-name">Xman</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">miasm学习笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-12-21T08:37:54.056Z" title="发表于 2023-12-21 16:37:54">2023-12-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-30T14:56:49.332Z" title="更新于 2023-12-30 22:56:49">2023-12-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/">工具学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="miasm学习笔记"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>突出一个啥都想学啥都不会</p>
+<p>安装就不细说，比较麻烦，主要是因为python版本高collections名字改了花了比较久时间改，其他的还好。环境是Ubuntu22.04+vscode远程调试</p>
+<h2 id="官网示例"><a href="#官网示例" class="headerlink" title="官网示例"></a>官网示例</h2><p>其实应该是官方blog，差不多</p>
+<h3 id="shellcode分析"><a href="#shellcode分析" class="headerlink" title="shellcode分析"></a>shellcode分析</h3><p><a target="_blank" rel="noopener" href="https://miasm.re/blog/2016/01/27/re150.html">https://miasm.re/blog/2016/01/27/re150.html</a><br>用一个smc的程序来做示例</p>
+<p><img src="C:\Users\xman\AppData\Roaming\Typora\typora-user-images\image-20231230223414763.png" alt="image-20231230223414763"></p>
+<p>一看就是xor动态解密，但是这里用miasm尝试</p>
+<p>github下载后的jitter&#x2F;sandbox_pe_x86_32.py文件有win32的sandbox的起始代码，复制过来把函数从pe的改成linux就可以了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> miasm.analysis.sandbox <span class="keyword">import</span> Sandbox_Linux_x86_32</span><br><span class="line"></span><br><span class="line"><span class="comment"># Insert here user defined methods</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Parse arguments</span></span><br><span class="line">parser = Sandbox_Linux_x86_32.parser(description=<span class="string">&quot;ELF sandboxer&quot;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&quot;filename&quot;</span>, <span class="built_in">help</span>=<span class="string">&quot;ELF Filename&quot;</span>)</span><br><span class="line">options = parser.parse_args()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create sandbox</span></span><br><span class="line">sb = Sandbox_Linux_x86_32(options.filename, options, <span class="built_in">globals</span>())</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run</span></span><br><span class="line">sb.run()</span><br></pre></td></tr></table></figure>
+
+<p>可以看到真的是纯初始的代码，不过miasm的parser有几个非常好用的命令行参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">usage: miasm_test1.py [-h] [-a ADDRESS] [-b] [-z] [-d] [-g GDBSERVER] [-j JITTER] [-q] [-i] [-s] [-c COMMAND_LINE] [--environment-<span class="built_in">vars</span> ENVIRONMENT_VARS]</span><br><span class="line">                      [--mimic-env]</span><br><span class="line">                      filename</span><br><span class="line"></span><br><span class="line">ELF sandboxer</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  filename              ELF Filename</span><br><span class="line"></span><br><span class="line">options:</span><br><span class="line">  -h, --<span class="built_in">help</span>            show this <span class="built_in">help</span> message <span class="keyword">and</span> exit</span><br><span class="line">  -a ADDRESS, --address ADDRESS</span><br><span class="line">                        Force entry point address</span><br><span class="line">  -b, --dumpblocs       Log disasm blocks</span><br><span class="line">  -z, --singlestep      Log single step</span><br><span class="line">  -d, --debugging       Debug shell</span><br><span class="line">  -g GDBSERVER, --gdbserver GDBSERVER</span><br><span class="line">                        Listen on port @port</span><br><span class="line">  -j JITTER, --jitter JITTER</span><br><span class="line">                        Jitter engine. Possible values are: gcc (default), llvm, python</span><br><span class="line">  -q, --quiet-function-calls</span><br><span class="line">                        Don<span class="string">&#x27;t log function calls</span></span><br><span class="line"><span class="string">  -i, --dependencies    Load PE and its dependencies</span></span><br><span class="line"><span class="string">  -s, --usesegm         Use segments</span></span><br><span class="line"><span class="string">  -c COMMAND_LINE, --command-line COMMAND_LINE</span></span><br><span class="line"><span class="string">                        Command line arguments</span></span><br><span class="line"><span class="string">  --environment-vars ENVIRONMENT_VARS</span></span><br><span class="line"><span class="string">                        Environment variables arguments</span></span><br><span class="line"><span class="string">  --mimic-env           Mimic the environment of a starting executable</span></span><br></pre></td></tr></table></figure>
+
+<p>这里我们首先用-b参数将disasm block打印出来，由于太多了建议重定向到一个文件里</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 miasm_test1.py -b reverseMe &gt; out.log</span><br></pre></td></tr></table></figure>
+
+<p>发现输出中，从头到尾都在解密，且从最后的报错中发现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;/home/pwnme/Desktop/pwn1/miasm_test1.py&quot;, line 15, in &lt;module&gt;</span><br><span class="line">    sb.run()</span><br><span class="line">  File &quot;/usr/local/lib/python3.10/dist-packages/miasm/analysis/sandbox.py&quot;, line 619, in run</span><br><span class="line">    super(Sandbox_Linux_x86_32, self).run(addr)</span><br><span class="line">  File &quot;/usr/local/lib/python3.10/dist-packages/miasm/analysis/sandbox.py&quot;, line 134, in run</span><br><span class="line">    self.jitter.continue_run()</span><br><span class="line">  File &quot;/usr/local/lib/python3.10/dist-packages/miasm/jitter/jitload.py&quot;, line 406, in continue_run</span><br><span class="line">    return next(self.run_iterator)</span><br><span class="line">  File &quot;/usr/local/lib/python3.10/dist-packages/miasm/jitter/jitload.py&quot;, line 374, in runiter_once</span><br><span class="line">    assert(self.get_exception() == 0)</span><br><span class="line">AssertionError</span><br></pre></td></tr></table></figure>
+
+<p>文章里说明，这种self.get_exception() &#x3D;&#x3D; 0的crash意思是exception被INT 0x80触发了。</p>
+<p>为了直观观看，我们在模拟执行结束后将text内存段的部分dump出来用ida查看cfg。这里是加上一个-i参数，但是上面的parse的命令行参数里-i是Load PE and its dependencies，不过这里用起来感觉是interactive的意思。不是很懂，不过加上-i后运行结束后还能和程序用python进行交互。权当是interactive了。</p>
+<p>可以看到，运行结束后的虚拟内存中，这个部分是我们的程序段的内存</p>
+<p><img src="C:\Users\xman\AppData\Roaming\Typora\typora-user-images\image-20231230225542516.png" alt="image-20231230225542516"></p>
+<p>我们dump出这部分的内存到本地，然后用ida查看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open(&quot;dump.bin&quot;, &quot;wb&quot;).write(sb.jitter.vm.get_mem(0x8048000, 0x4000))</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\xman\AppData\Roaming\Typora\typora-user-images\image-20231230225615266.png" alt="image-20231230225615266"></p>
+<p><img src="C:\Users\xman\AppData\Roaming\Typora\typora-user-images\image-20231230225635485.png" alt="image-20231230225635485"></p>
+<p>非常的答辩，内存也是一块一块的，无法阅读。</p>
+<h3 id="DSE动态符号执行"><a href="#DSE动态符号执行" class="headerlink" title="DSE动态符号执行"></a>DSE动态符号执行</h3><p>由于对这个比较感兴趣先学了</p>
+<p>原文链接: <a target="_blank" rel="noopener" href="https://miasm.re/blog/2017/10/05/playing_with_dynamic_symbolic_execution.html">https://miasm.re/blog/2017/10/05/playing_with_dynamic_symbolic_execution.html</a></p>
+<p>顺便看到个有意思的项目<a target="_blank" rel="noopener" href="https://miasm.re/blog/2017/10/05/playing_with_dynamic_symbolic_execution.html#id3">TigressVM</a></p>
+<p>文章的意思是通过一步步模拟执行IR，通过变异输入来走到不同分支来获得所有返回值的情况，从而使我们不需要查看代码（可能被混淆的代码）就可以知道代码有什么作用。</p>
+<p>然后就是演示环节，用TigressVM的tigress-0-challenge-0</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20231221165937758.png" alt="image-20231221165937758"></p>
+<p>可以看到这个函数是被混淆了，硬编码了一个data数组然后取值都是在这个数组里面，同样还加了一些常量替换的混淆，一般我来做就是开调了，但是这里用miasm试试</p>
+<p>装好环节跑完后报错</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[INFO]: <span class="built_in">xxx___libc_start_main</span>(main=<span class="number">0x4005f4</span>, argc=<span class="number">0x2</span>, ubp_av=<span class="number">0x13ffc4</span>, init=<span class="number">0x400ca0</span>, fini=<span class="number">0x400d30</span>, rtld_fini=<span class="number">0x0</span>, stack_end=<span class="number">0x13ffb8</span>) ret addr: <span class="number">0x400539</span></span><br><span class="line"><span class="built_in">Traceback</span> (most recent call last):</span><br><span class="line">  File <span class="string">&quot;/home/pwnme/Desktop/pwn1/pwn123.py&quot;</span>, line <span class="number">14</span>, in &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    sb.<span class="built_in">run</span>()</span><br><span class="line">  File <span class="string">&quot;/usr/local/lib/python3.10/dist-packages/miasm/analysis/sandbox.py&quot;</span>, line <span class="number">679</span>, <span class="function">in run</span></span><br><span class="line"><span class="function">    <span class="title">super</span><span class="params">(Sandbox_Linux_x86_64, self)</span>.<span class="title">run</span><span class="params">(addr)</span></span></span><br><span class="line"><span class="function">  File &quot;/usr/local/lib/python3.10/dist-packages/miasm/analysis/sandbox.py&quot;, line 134, in run</span></span><br><span class="line"><span class="function">    self.jitter.<span class="title">continue_run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  File &quot;/usr/local/lib/python3.10/dist-packages/miasm/jitter/jitload.py&quot;, line 406, in continue_run</span></span><br><span class="line"><span class="function">    <span class="keyword">return</span> <span class="title">next</span><span class="params">(self.run_iterator)</span></span></span><br><span class="line"><span class="function">  File &quot;/usr/local/lib/python3.10/dist-packages/miasm/jitter/jitload.py&quot;, line 350, in runiter_once</span></span><br><span class="line"><span class="function">    <span class="keyword">for</span> res in self.breakpoints_handler.<span class="title">call_callbacks</span><span class="params">(self.pc, self)</span>:</span></span><br><span class="line"><span class="function">  File <span class="string">&quot;/usr/local/lib/python3.10/dist-packages/miasm/jitter/jitload.py&quot;</span>, line <span class="number">126</span>, in call_callbacks</span></span><br><span class="line"><span class="function">    res =</span> <span class="built_in">c</span>(*args)</span><br><span class="line">  File <span class="string">&quot;/usr/local/lib/python3.10/dist-packages/miasm/jitter/jitload.py&quot;</span>, line <span class="number">480</span>, <span class="function">in handle_lib</span></span><br><span class="line"><span class="function">    raise <span class="title">ValueError</span><span class="params">(<span class="string">&#x27;unknown api&#x27;</span>, hex(jitter.pc), repr(fname))</span></span></span><br><span class="line"><span class="function">ValueError: (<span class="string">&#x27;unknown api&#x27;</span>, <span class="string">&#x27;0x71111044&#x27;</span>, <span class="string">&quot;&#x27;xxx_strtoul&#x27;&quot;</span>)</span></span><br></pre></td></tr></table></figure>
+
+<p>发现是有一个unknown api strtoul。回头看看程序发现是在main里面</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20231221170208107.png" alt="image-20231221170208107"></p>
+<p>我们需要模拟一下这个库函数，和写unicorn一样</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">xxx_strtoul</span>(<span class="params">jitter</span>):</span><br><span class="line">    <span class="comment">#模拟传入参数</span></span><br><span class="line">    ret_ad, args = jitter.func_args_systemv([<span class="string">&quot;nptr&quot;</span>, <span class="string">&quot;endptr&quot;</span>, <span class="string">&quot;base&quot;</span>])</span><br><span class="line">    <span class="keyword">assert</span> args.endptr == <span class="number">0</span></span><br><span class="line">    <span class="comment">#获得指针指向的string</span></span><br><span class="line">    content = get_win_str_a(jitter,args.nptr)</span><br><span class="line">    <span class="comment">#转10进制</span></span><br><span class="line">    value = <span class="built_in">int</span>(content, args.base)</span><br><span class="line">    <span class="built_in">print</span> (<span class="string">&quot;%r -&gt; %d&quot;</span> % (content, value))</span><br><span class="line">    <span class="comment">#设置返回值，ret_ad是返回的address,value是返回的值</span></span><br><span class="line">    jitter.func_ret_systemv(ret_ad, value)</span><br></pre></td></tr></table></figure>
+
+<p>注意这里代码改了一下，因为原文的那个函数不用了换成上面的那个get_win_str_a了</p>
+<p>模拟完毕，但是还是报内存错，这是因为程序有canary，咱们还是得模拟一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 初始化stack上的canary</span></span><br><span class="line">sb.jitter.ir_arch.do_all_segm = <span class="literal">True</span></span><br><span class="line">FS_0_ADDR = <span class="number">0x7ff70000</span></span><br><span class="line">sb.jitter.cpu.FS = <span class="number">0x4</span></span><br><span class="line"><span class="comment"># 将FS_0_ADDR设置为FS的段基址</span></span><br><span class="line">sb.jitter.cpu.set_segm_base(sb.jitter.cpu.FS, FS_0_ADDR)</span><br><span class="line"><span class="comment"># 在FS_0_ADDR偏移0x28的地址开一个新的页,权限为只读,用0x42填充,描述信息是stack canary FS[0x28]</span></span><br><span class="line">sb.jitter.vm.add_memory_page(</span><br><span class="line">    FS_0_ADDR + <span class="number">0x28</span>, PAGE_READ, <span class="string">b&quot;\x42\x42\x42\x42\x42\x42\x42\x42&quot;</span>, <span class="string">&quot;Stack canary FS[0x28]&quot;</span>)</span><br><span class="line">options.jitter = <span class="string">&quot;llvm&quot;</span></span><br><span class="line">sb.run()</span><br></pre></td></tr></table></figure>
+
+<p>描述都写代码里了</p>
+<p>加上后就可以正常运行了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[WARNING]: warning adding .dll to modulename</span><br><span class="line">[WARNING]: xxx.dll</span><br><span class="line">[WARNING]: Create dummy entry for &#x27;xxx.dll&#x27;</span><br><span class="line">[WARNING]: warning adding .dll to modulename</span><br><span class="line">[WARNING]: xxx.dll</span><br><span class="line">[WARNING]: warning adding .dll to modulename</span><br><span class="line">[WARNING]: xxx.dll</span><br><span class="line">[WARNING]: warning adding .dll to modulename</span><br><span class="line">[WARNING]: xxx.dll</span><br><span class="line">[WARNING]: warning adding .dll to modulename</span><br><span class="line">[WARNING]: xxx.dll</span><br><span class="line">[WARNING]: warning adding .dll to modulename</span><br><span class="line">[WARNING]: xxx.dll</span><br><span class="line">[INFO]: xxx___libc_start_main(main=0x4005f4, argc=0x2, ubp_av=0x13ffc4, init=0x400ca0, fini=0x400d30, rtld_fini=0x0, stack_end=0x13ffb8) ret addr: 0x400539</span><br><span class="line">[INFO]: xxx_strtoul(nptr=0x13ffec, endptr=0x0, base=0xa) ret addr: 0x400660</span><br><span class="line">&#x27;123456789&#x27; -&gt; 123456789</span><br><span class="line">[INFO]: xxx_printf(fmt=0x400dbd) ret addr: 0x4006b4</span><br><span class="line">8131652486802131118</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xiananren.github.io">Xman</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xiananren.github.io/2023/12/21/miasm%E5%AD%A6%E4%B9%A0/">https://xiananren.github.io/2023/12/21/miasm%E5%AD%A6%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xiananren.github.io" target="_blank">Xman</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20231221163847268.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/11/23/binary-ninja%E8%B0%83%E8%AF%95python%E8%84%9A%E6%9C%AC/" title="binary ninja vscode远程调试bn脚本"><img class="cover" src="https://pic.imgdb.cn/item/655f18e7c458853aef546664.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">binary ninja vscode远程调试bn脚本</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://pic.imgdb.cn/item/63f38a68f144a010071d33b2.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Xman</div><div class="author-info__description">深大信安Aurora/国际战队r3kapig逆向手，擅长坐牢</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">live a life</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%98%E7%BD%91%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.</span> <span class="toc-text">官网示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#shellcode%E5%88%86%E6%9E%90"><span class="toc-number">1.1.</span> <span class="toc-text">shellcode分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DSE%E5%8A%A8%E6%80%81%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C"><span class="toc-number">1.2.</span> <span class="toc-text">DSE动态符号执行</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/12/21/miasm%E5%AD%A6%E4%B9%A0/" title="miasm学习笔记"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20231221163847268.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="miasm学习笔记"/></a><div class="content"><a class="title" href="/2023/12/21/miasm%E5%AD%A6%E4%B9%A0/" title="miasm学习笔记">miasm学习笔记</a><time datetime="2023-12-21T08:37:54.056Z" title="发表于 2023-12-21 16:37:54">2023-12-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/23/binary-ninja%E8%B0%83%E8%AF%95python%E8%84%9A%E6%9C%AC/" title="binary ninja vscode远程调试bn脚本"><img src="https://pic.imgdb.cn/item/655f18e7c458853aef546664.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="binary ninja vscode远程调试bn脚本"/></a><div class="content"><a class="title" href="/2023/11/23/binary-ninja%E8%B0%83%E8%AF%95python%E8%84%9A%E6%9C%AC/" title="binary ninja vscode远程调试bn脚本">binary ninja vscode远程调试bn脚本</a><time datetime="2023-11-23T08:58:45.154Z" title="发表于 2023-11-23 16:58:45">2023-11-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/20/unity%E5%AD%A6%E4%B9%A0/" title="unity游戏开发学习笔记"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221221112516.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity游戏开发学习笔记"/></a><div class="content"><a class="title" href="/2023/11/20/unity%E5%AD%A6%E4%B9%A0/" title="unity游戏开发学习笔记">unity游戏开发学习笔记</a><time datetime="2023-11-20T14:51:15.966Z" title="发表于 2023-11-20 22:51:15">2023-11-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/18/rust%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="rust学习笔记"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20231018234656095.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="rust学习笔记"/></a><div class="content"><a class="title" href="/2023/10/18/rust%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="rust学习笔记">rust学习笔记</a><time datetime="2023-10-18T15:41:47.012Z" title="发表于 2023-10-18 23:41:47">2023-10-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/05/%E5%8D%97%E4%BA%AC%E5%A4%A7%E5%AD%A6jyy%20os%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="南京大学jyy os学习笔记"><img src="https://pic.imgdb.cn/item/651e6dd6c458853aef2b30b8.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="南京大学jyy os学习笔记"/></a><div class="content"><a class="title" href="/2023/10/05/%E5%8D%97%E4%BA%AC%E5%A4%A7%E5%AD%A6jyy%20os%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="南京大学jyy os学习笔记">南京大学jyy os学习笔记</a><time datetime="2023-10-05T08:01:00.321Z" title="发表于 2023-10-05 16:01:00">2023-10-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Xman</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
