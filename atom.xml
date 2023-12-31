@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2023-12-30T15:00:43.226Z</updated>
+  <updated>2023-12-31T06:33:03.853Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>2023年终总结</title>
+    <link href="https://xiananren.github.io/2023/12/31/2023%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
+    <id>https://xiananren.github.io/2023/12/31/2023%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</id>
+    <published>2023-12-31T04:35:55.790Z</published>
+    <updated>2023-12-31T06:33:03.853Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="年终总结" scheme="https://xiananren.github.io/categories/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>miasm学习笔记</title>
@@ -449,29 +472,6 @@
     
     
     <category term="源码分析" scheme="https://xiananren.github.io/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>MAS CRACKME3 分析笔记</title>
-    <link href="https://xiananren.github.io/2023/02/21/%E5%88%86%E6%9E%90%E8%AE%B0%E5%BD%95/"/>
-    <id>https://xiananren.github.io/2023/02/21/%E5%88%86%E6%9E%90%E8%AE%B0%E5%BD%95/</id>
-    <published>2023-02-21T04:27:42.352Z</published>
-    <updated>2023-03-06T13:54:42.278Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html"></summary>
-        
-      
-    
-    
-    
-    <category term="安卓逆向学习" scheme="https://xiananren.github.io/categories/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91%E5%AD%A6%E4%B9%A0/"/>
     
     
   </entry>
