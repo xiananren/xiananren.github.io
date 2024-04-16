@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2024-03-19T07:27:35.995Z</updated>
+  <updated>2024-04-16T15:39:41.154Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>miasm学习【1】--分析并去除smc</title>
+    <link href="https://xiananren.github.io/2024/04/16/miasm%E5%AD%A6%E4%B9%A0(1)/"/>
+    <id>https://xiananren.github.io/2024/04/16/miasm%E5%AD%A6%E4%B9%A0(1)/</id>
+    <published>2024-04-16T14:12:13.762Z</published>
+    <updated>2024-04-16T15:39:41.154Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="miasm" scheme="https://xiananren.github.io/categories/miasm/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Ubuntu git无法push的解决办法</title>
@@ -58,29 +81,6 @@
     
     
     <category term="年终总结" scheme="https://xiananren.github.io/categories/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>miasm学习笔记</title>
-    <link href="https://xiananren.github.io/2023/12/21/miasm%E5%AD%A6%E4%B9%A0/"/>
-    <id>https://xiananren.github.io/2023/12/21/miasm%E5%AD%A6%E4%B9%A0/</id>
-    <published>2023-12-21T08:37:54.056Z</published>
-    <updated>2023-12-30T15:00:43.226Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html"></summary>
-        
-      
-    
-    
-    
-    <category term="工具学习" scheme="https://xiananren.github.io/categories/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/"/>
     
     
   </entry>
