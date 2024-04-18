@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2024-04-16T15:44:25.022Z</updated>
+  <updated>2024-04-18T12:27:12.634Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>miasm学习【2】--动态符号执行</title>
+    <link href="https://xiananren.github.io/2024/04/18/miasm%E5%AD%A6%E4%B9%A0%E3%80%902%E3%80%91--%E5%8A%A8%E6%80%81%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
+    <id>https://xiananren.github.io/2024/04/18/miasm%E5%AD%A6%E4%B9%A0%E3%80%902%E3%80%91--%E5%8A%A8%E6%80%81%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/</id>
+    <published>2024-04-18T08:19:37.059Z</published>
+    <updated>2024-04-18T12:27:12.634Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="miasm" scheme="https://xiananren.github.io/categories/miasm/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>miasm学习【1】--分析并去除smc</title>
@@ -449,29 +472,6 @@
     
     
     <category term="逆向学习" scheme="https://xiananren.github.io/categories/%E9%80%86%E5%90%91%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>llvm常见函数收集</title>
-    <link href="https://xiananren.github.io/2023/02/21/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/"/>
-    <id>https://xiananren.github.io/2023/02/21/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/</id>
-    <published>2023-02-21T05:11:16.636Z</published>
-    <updated>2023-03-06T13:57:02.502Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html"></summary>
-        
-      
-    
-    
-    
-    <category term="语言学习" scheme="https://xiananren.github.io/categories/%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/"/>
     
     
   </entry>
