@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2024-04-18T12:27:12.634Z</updated>
+  <updated>2024-04-19T14:51:44.300Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="https://xiananren.github.io/2024/04/19/240419/"/>
+    <id>https://xiananren.github.io/2024/04/19/240419/</id>
+    <published>2024-04-19T14:32:16.237Z</published>
+    <updated>2024-04-19T14:51:44.300Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>miasm学习【2】--动态符号执行</title>
@@ -449,29 +470,6 @@
     
     
     <category term="滴水逆向" scheme="https://xiananren.github.io/categories/%E6%BB%B4%E6%B0%B4%E9%80%86%E5%90%91/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>c++异常处理学习笔记</title>
-    <link href="https://xiananren.github.io/2023/02/21/C++%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%20%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    <id>https://xiananren.github.io/2023/02/21/C++%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%20%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</id>
-    <published>2023-02-21T14:11:46.845Z</published>
-    <updated>2023-03-06T13:55:56.097Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html"></summary>
-        
-      
-    
-    
-    
-    <category term="逆向学习" scheme="https://xiananren.github.io/categories/%E9%80%86%E5%90%91%E5%AD%A6%E4%B9%A0/"/>
     
     
   </entry>
