@@ -1,0 +1,294 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>车联网入门第一题--D3ctf-d3car | Xman</title><meta name="author" content="Xman"><meta name="copyright" content="Xman"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="周末和烧卖激情的打了D3ctf，逆向没啥特别想记录的，主要是这次是本人第一次接触车机类的题目，主要时间在和师傅们一起做这个，感觉非常有意思，学到很多，但是最后还是只日出来一个flag，后面俩没日出来。不过日的时候疯狂搜索各种相关知识，也算小小的入了一点点门了？之后再找点相关 发现环境已经寄了，只能靠回忆来复现了 分三部分，相关知识介绍，自己做的部分和复现的部分 相关知识mqtt简述MQTT 是一种">
+<meta property="og:type" content="article">
+<meta property="og:title" content="车联网入门第一题--D3ctf-d3car">
+<meta property="og:url" content="https://xiananren.github.io/2024/04/30/D3ctf-D3car%E5%A4%8D%E7%8E%B0/index.html">
+<meta property="og:site_name" content="Xman">
+<meta property="og:description" content="周末和烧卖激情的打了D3ctf，逆向没啥特别想记录的，主要是这次是本人第一次接触车机类的题目，主要时间在和师傅们一起做这个，感觉非常有意思，学到很多，但是最后还是只日出来一个flag，后面俩没日出来。不过日的时候疯狂搜索各种相关知识，也算小小的入了一点点门了？之后再找点相关 发现环境已经寄了，只能靠回忆来复现了 分三部分，相关知识介绍，自己做的部分和复现的部分 相关知识mqtt简述MQTT 是一种">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430224550206.png">
+<meta property="article:published_time" content="2024-04-30T06:02:57.251Z">
+<meta property="article:modified_time" content="2024-04-30T14:46:14.914Z">
+<meta property="article:author" content="Xman">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430224550206.png"><link rel="shortcut icon" href="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20230221135524334.png"><link rel="canonical" href="https://xiananren.github.io/2024/04/30/D3ctf-D3car%E5%A4%8D%E7%8E%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '车联网入门第一题--D3ctf-d3car',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-30 22:46:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Xman" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://pic.imgdb.cn/item/63f38a68f144a010071d33b2.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430224550206.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Xman"><span class="site-name">Xman</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">车联网入门第一题--D3ctf-d3car</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-30T06:02:57.251Z" title="发表于 2024-04-30 14:02:57">2024-04-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-30T14:46:14.914Z" title="更新于 2024-04-30 22:46:14">2024-04-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%BD%A6%E8%81%94%E7%BD%91/">车联网</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="车联网入门第一题--D3ctf-d3car"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>周末和烧卖激情的打了D3ctf，逆向没啥特别想记录的，主要是这次是本人第一次接触车机类的题目，主要时间在和师傅们一起做这个，感觉非常有意思，学到很多，但是最后还是只日出来一个flag，后面俩没日出来。不过日的时候疯狂搜索各种相关知识，也算小小的入了一点点门了？之后再找点相关</p>
+<p>发现环境已经寄了，只能靠回忆来复现了</p>
+<p>分三部分，相关知识介绍，自己做的部分和复现的部分</p>
+<h1 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h1><h2 id="mqtt"><a href="#mqtt" class="headerlink" title="mqtt"></a>mqtt</h2><h3 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h3><p>MQTT 是一种基于标准的消息传递协议或规则集，用于机器对机器的通信。智能传感器、可穿戴设备和其他物联网（IoT）设备通常必须通过带宽有限的资源受限网络传输和接收数据。这些物联网设备使用 MQTT 进行数据传输，因为它易于实施，并且可以有效地传输物联网数据。MQTT 支持设备到云端和云端到设备之间的消息传递。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>mqtt是基于发布&#x2F;订阅模型工作的协议，和普通的网络通信协议不一样，一般的网络通信协议是服务端和客户端相互通信，但是mqtt是引入了一个代理，每个客户端（用mqtt通信的设备都可以叫mqtt客户端）都可以是发布者和订阅者。如果是订阅消息，就是客户端向代理发送<strong>SUBSCRIBE</strong>，后接一个表示订阅目标的参数，然后就可以接收到指定目标的消息。如果是发布消息，设备就需要向代理发送publish的消息，然后代理对发送过来的消息进行筛选，把它转发到订阅了这个消息的订阅者。</p>
+<p>如果说通俗一点，就相当于b站订阅up主。视频up主和普通观众就是mqtt客户端，b站就是代理。up主发布视频就是mqtt publish，b站收到up主发布视频的信息后将视频发布的信息转发给订阅了这个up主的观众(也是mqtt客户端)。</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430171929420.png" alt="image-20240430171929420"></p>
+<h3 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h3><ul>
+<li>mqtt客户端和mqtt代理建立连接</li>
+</ul>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430172112706.png" alt="image-20240430172112706"></p>
+<ul>
+<li>mqtt客户端执行订阅消息或者发布消息操作</li>
+<li>mqtt代理收到消息后将其转发到订阅这个消息的对应的客户端</li>
+</ul>
+<h2 id="UDS"><a href="#UDS" class="headerlink" title="UDS"></a>UDS</h2><p>UDS协议(Unified Diagnostic Services，统一诊断服务)是诊断服务的规范化标准，比如读取故障码应该向ecu发什么指令，读数据流又发什么指令。</p>
+<p>ISO14229-1协议定义了6类功能，26种服务，分别是：</p>
+<ul>
+<li>1）诊断和通信管理功能单元，包括10，11，27，28，3E，83，84，85，86，87共10种服务；</li>
+<li>2）数据传输功能单元，包括22，23，24，2A，2C，2E，3D共7种服务；</li>
+<li>3）存储数据传输功能单元，包括14，19共2种服务；</li>
+<li>4）输入输出控制功能单元，包括2F服务；</li>
+<li>5）例行程序功能单元，包括31服务；</li>
+<li>6）上传下载控制功能单元，包括34，35，36，37，38共5种服务。</li>
+</ul>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430181231434.png" alt="image-20240430181231434"></p>
+<p>不过咱们这个题只用到了一个服务，27的SecurityAccess（安全访问）</p>
+<h2 id="frp"><a href="#frp" class="headerlink" title="frp"></a>frp</h2><p>(因为我不熟所以顺便学了)</p>
+<p>frp是一个体积轻量的反向代理软件，可以使处于内网或防火墙后的设备对外界提供服务，支持 TCP、UDP、HTTP、HTTPS 等多种协议。将内网服务以安全、便捷的方式通过具有公网 IP 节点的中转暴露到公网。</p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>frp 主要由客户端(frpc)和服务端(frps)组成，服务端通常部署在具有公网 IP 的机器上，客户端通常部署在需要穿透的内网服务所在的机器上。内网服务由于没有公网 IP，不能被非局域网内的其他用户访问。隐藏用户通过访问服务端的 frps，由 frp 负责根据请求的端口或其他信息将请求路由到对应的内网机器，从而实现通信。</p>
+<h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430210731367.png" alt="image-20240430210731367"></p>
+<h1 id="自己做的"><a href="#自己做的" class="headerlink" title="自己做的"></a>自己做的</h1><p>题目给了俩靶机端口，一个是连接远程的安卓模拟器，如果模拟器启动了就可以用adb连接另一个端口，也就是车机的系统</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430145808293.png" alt="image-20240430145808293"></p>
+<h2 id="flag1"><a href="#flag1" class="headerlink" title="flag1"></a>flag1</h2><p>第一个flag其实比较简单，但是我们想复杂了。当时随便找了一圈没东西，以为是要打cve提权。找到了linux内核版本和安卓版本在网上找了一圈编译了一圈，但是一个成功的都没有。当时是用adbwebkit直接查看到了所有的包，才看到有一个奇怪的包把apk dump出来的。</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430150253698.png" alt="image-20240430150253698"></p>
+<p>也可以用安卓命令行的命令查看所有包名和包名的apk的路径</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm list packages -f</span><br></pre></td></tr></table></figure>
+
+<p>都可以。没啥日车的经验，这种指令应该最开始就敲的。</p>
+<p>总而言之找到这个com.d3car.factory包后dump出apk，拖进jadx后在layout.xml里找到了第一个flag</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430151337497.png" alt="image-20240430151337497"></p>
+<p>非常easy的第一个flag</p>
+<h2 id="flag2-未完成"><a href="#flag2-未完成" class="headerlink" title="flag2-未完成"></a>flag2-未完成</h2><p>apk拖入jadx后是没有dex代码的，只有资源文件。从manifest中可以得知有三个activity</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430151822032.png" alt="image-20240430151822032"></p>
+<p>因为这里上面俩都没设置export&#x3D;false，所以我们直接am调用就可以调到对应的activity。这里我们直接调用这个pwdAuthActivity。</p>
+<p>忘记说了，这里我们用了scrcpy实现了车机窗口的可视化，不然看不到车机显示的东西</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">am start -n com.d3car.factory/.PwdAuthActivity</span><br></pre></td></tr></table></figure>
+
+<p>scrcpy中弹出这个界面</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430152302343.png" alt="image-20240430152302343"></p>
+<p>随便输入发现会弹出错误提示，这证明肯定是有验证的地方的。</p>
+<p>重新找到apk的目录，发现目录下还有一个odex和vdex。用工具vdexExtractor把vdex还原成dex后得到逻辑</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430152734542.png" alt="image-20240430152734542"></p>
+<p>非常简单的异或，注意这里的key是pwd界面的上面那个十六进制，而不是这里的20240419</p>
+<p>异或得到1dacdfma34560rDa，本以为是flag，但是发现似乎只是能走到下一个tcpdump的流程</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430152912546.png" alt="image-20240430152912546"></p>
+<p>这个password的用处就是把这个isChecked过了，因为如果我们直接去am拉起这个tcpdump的activity会失败，只有这样输入后才能正常走到这个页面。</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430153024303.png" alt="image-20240430153024303"></p>
+<p>根据activity的代码可知，开启tcpdump后会执行这个指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/system/xbin/tcpdump -i any -s 0 -w /sdcard/tcpdumplog.pcap -W 1</span><br></pre></td></tr></table></figure>
+
+<p>会将log存到&#x2F;sdcard&#x2F;tcpdumplog.pcap，运行一会后dump出来pcap文件用wireshark看看流量</p>
+<p>发现了很多mqtt协议的流量(当时的副本)</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430155400596.png" alt="image-20240430155400596"></p>
+<p>多dump几次可以发现规律。它首先是进行一个connect请求，可以看到client ID，user name，password都给出来了</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430155603451.png" alt="image-20240430155603451"></p>
+<p>然后一个connect的ack表示连接确认，这个上面相关知识部分已经介绍过了。随后就是两个publish的操作，对应的订阅的对象是can&#x2F;514&#x2F;write，write的数据是固定的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">022701ffffffffff</span><br><span class="line">0527022dcf28ffff</span><br></pre></td></tr></table></figure>
+
+<p>由27 01和27 02和他订阅对象名字的can&#x2F;514&#x2F;write容易得到，这是用mqtt传输的uds协议，而27 01和27 02是uds的<strong>安全访问</strong>的经典的数据</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430173552954.png" alt="image-20240430173552954"></p>
+<p>我们将其拆分一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">长度 服务请求 子功能        密钥	  填充</span><br><span class="line">02  27		01          		ffffffffff</span><br><span class="line">05  27		02  		2dcf28  ffff</span><br></pre></td></tr></table></figure>
+
+<p>01代表的是request seed，02代表的是send key。所以可以得知2dcf28是对应的密钥。</p>
+<p>既然都这样了，用户名密码key都有，肯定是需要订阅然后发送信息的。所以接下来的操作首先需要找到方法在远程adb环境中执行mqtt的订阅与publish操作，其次是构造mqtt数据发送给代理来监听其他的mqtt客户端publish的消息。</p>
+<h3 id="和代理交互"><a href="#和代理交互" class="headerlink" title="和代理交互"></a>和代理交互</h3><p>比赛时我们用的方法是github找能进行mqtt交互的arm架构的elf文件。找了老半天csome✌找到了一个有现成二进制的项目。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/rainu/mqtt-shell/releases/tag/v2.3.0">https://github.com/rainu/mqtt-shell/releases/tag/v2.3.0</a></p>
+<p>然后兴冲冲的push到经典的&#x2F;data&#x2F;local&#x2F;tmp进行交互，不过很后面的时候发现他pub的输入解析比较奇怪，后面csome✌又用重写了输入的parse然后编译了一份新的，当然是后话。</p>
+<p>然后我们这样交互了半天突然有师傅指出可以用adb forward转发出端口来然后在上面跑frps和frpc搞内网穿透，就可以直接用python的mqtt库了。原以为远程adb shell不出网搞不了，但是搞成了，非常尴尬。</p>
+<h3 id="构造数据"><a href="#构造数据" class="headerlink" title="构造数据"></a>构造数据</h3><p>总而言之能交互了，我们最开始随便输入订阅和publish代码，结果发现什么回显都没有。后面发现是得正确构造数据才能有回应，随便构造的数据不符合uds的数据格式也没法回显。</p>
+<p>用csome✌的脚本可以写python和车机的mqtt交互</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> paho.mqtt <span class="keyword">import</span> client <span class="keyword">as</span> mqtt_client</span><br><span class="line"><span class="keyword">import</span> paho.mqtt.client <span class="keyword">as</span> mqtt</span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">mqttx conn -h &#x27;192.168.27.16&#x27; -p 1883 -u &#x27;abmaM_kcalb&#x27; -P &#x27;Ya5_1_n4C_tahW&#x27; -i &#x27;Gojo_Satoru&#x27;</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">broker = <span class="string">&#x27;127.0.0.1&#x27;</span></span><br><span class="line">port = <span class="number">1883</span></span><br><span class="line">client_id = <span class="string">&quot;Gojo_Satoru&quot;</span></span><br><span class="line">username = <span class="string">&quot;abmaM_kcalb&quot;</span></span><br><span class="line">passwd = <span class="string">&quot;Ya5_1_n4C_tahW&quot;</span></span><br><span class="line">topic = <span class="string">&quot;/*&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">connect_mqtt</span>():</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">on_connect</span>(<span class="params">client, userdata, flags, rc</span>):</span><br><span class="line">        <span class="keyword">if</span> rc == <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Connected to MQTT <span class="subst">&#123;client&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Failed to connect, return code %d\n&quot;</span>, rc)</span><br><span class="line"></span><br><span class="line">    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id, transport=<span class="string">&#x27;tcp&#x27;</span>)</span><br><span class="line">    client.username_pw_set(username, password=passwd)</span><br><span class="line"></span><br><span class="line">    client.on_connect = on_connect</span><br><span class="line">    client.connect(broker, port)</span><br><span class="line">    <span class="keyword">return</span> client</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">subscribe</span>(<span class="params">client: mqtt_client</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">on_message</span>(<span class="params">client, userdata, msg</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Received `<span class="subst">&#123;msg.payload.decode()&#125;</span>` from `<span class="subst">&#123;msg.topic&#125;</span>` topic&quot;</span>)</span><br><span class="line"></span><br><span class="line">    client.subscribe(topic)</span><br><span class="line">    client.on_message = on_message</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run</span>():</span><br><span class="line">    client = connect_mqtt()</span><br><span class="line">    subscribe(client)</span><br><span class="line">    client.loop_forever()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    run()</span><br></pre></td></tr></table></figure>
+
+<p>按照它正确的格式pub就可以有返回的消息，我们最后也是成功过了验证，但是环境拖的时间太久了最后还是没能继续分析就结束了。</p>
+<p>构造数据就是</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430213816819.png" alt="image-20240430213816819"></p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430213757613.png" alt="image-20240430213757613"></p>
+<h1 id="颅内复现"><a href="#颅内复现" class="headerlink" title="颅内复现"></a>颅内复现</h1><p>接下来就是看看wp的做法了，后面的内容是我根据几个wp理解而来的。有不对的地方希望大家能指正。</p>
+<h2 id="flag2"><a href="#flag2" class="headerlink" title="flag2"></a>flag2</h2><p>首先切换session到扩展会话模式。为什么要切换扩展会话模式，因为从前面dump的pcap包可知服务器一直在发三种包</p>
+<p>‘022701ffffffffff’和’0527022dcf28ffff’是鉴权请求，’037f277fffffffff’是服务器反馈当前session模式下鉴权失败，返回的7f是错误代码</p>
+<p>我个人理解是有mqtt客户端在一直请求一个需要高一些权限的服务，但是当前的权限不够，所以会返回7f，也就是错误代码。</p>
+<p>所以接下来就应该切换session到扩展会话模式</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430220207713.png" alt="image-20240430220207713"></p>
+<p>然后就可以获得成功反馈。证明确实是权限不够。</p>
+<p>push fscan进去扫描端口可以发现80端口，访问可以下载多个seed2key.dll。socat转发端口后下载可以获取所有的dll。只获得dll没用，我们这里需要获取车机的ECU软件版本号，找到版本号后定位对应版本的seed2key.dll再去逆向获得seed。</p>
+<p>获取车机ECU版本号是通过22服务，22服务可以通过id去读取数据，而车机ECU版本号是对应的0xf189</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430221327257.png" alt="image-20240430221327257"></p>
+<p>这里发送的顺序如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">02 01 03 拓展会话</span><br><span class="line">02 27 01 请求种子</span><br><span class="line">05 27 02 xx xx xx 返回key</span><br><span class="line">03 22 f1 89 请求版本号</span><br></pre></td></tr></table></figure>
+
+<p>返回的key是通过交互返回值来判断的，114514(经典)</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430221951125.png" alt="image-20240430221951125"></p>
+<p>中间两步原理如下</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430221718045.png" alt="image-20240430221718045"></p>
+<p>发送 22 f1 89后可以获得版本号11.405.10.4.233，找到seed2key.dll后逆向找到seed，然后挨个试31功能（例程控制）去鉴权就行了。</p>
+<p>服务器实现的功能看起来是找出来的，由于我没有确切复现而是颅内复现，就先默认是找到31功能了</p>
+<p>代码都在wm的wp里，放在参考了有需要的可以直接去看（</p>
+<p>最后效果是这样</p>
+<p><img src="https://cdn.ha1c9on.top/img/(null)-20240429201537487.(null)" alt="img"></p>
+<h2 id="flag3"><a href="#flag3" class="headerlink" title="flag3"></a>flag3</h2><p>这个就有点没想到了，大家看到桌面的where am i located都以为是要拉起pwd验证，没人往gps方向想，不然说不定有可能解出来的</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430222746081.png" alt="image-20240430222746081"></p>
+<p>首先find &#x2F; -name “D3*”可以找到一个证书D3CA.cer和一个奇怪的数据文件D3CALib</p>
+<p>尝试安装apk的话会报错INSTALL_PARSE_FAILED_INVALID_APP_STORE_CERTIFICATE，发现是车机在PackageManagerService里面添加了自定义的签名认证。</p>
+<p>官方wp意思是爆破D3CALib这个keystore得到密码d^3ctf就可以用这个keystone安装获取定位的apk从而获取gps，但是我不是很理解怎么看出这个是keystore的而且怎么往爆破想的。</p>
+<p>还是wm师傅的wp帅。</p>
+<p>因为adb指令中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell dumpsys location</span><br></pre></td></tr></table></figure>
+
+<p>可以获取GPS定位信息，但是只有程序定位过一次后才可以看到，不能主动触发。而misc经典的从拍照照片中找到地址信息的经验告诉我们，如果相机定位权限和加入位置信息都开了的话，我们就可以通过一次拍照获取gps，随之使用dumpsys location获取GPS。</p>
+<p>分别给相机开定位权限和加入照片的位置信息后成功用dumpsys location获取经纬度信息，然后去高德搜定位后在评论区就可以找到一个用户，简介就是flag</p>
+<p><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430223910822.png" alt="image-20240430223910822"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>真可惜没有环境了，后面颅内复现的部分可能比较抽象和流程有些问题，或者说整篇复现的文章都是一路写下来的比较意识流，希望师傅们看到有错误的地方后能批评指正一下。</p>
+<p>总的来说很好玩，特别是最后的wm师傅做的flag3，太精彩了。队友们也非常给力，陪我熬夜到了4点多。烧卖yyds！</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://aws.amazon.com/cn/what-is/mqtt/">https://aws.amazon.com/cn/what-is/mqtt/</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/huihuige092/article/details/105287912">https://blog.csdn.net/huihuige092/article/details/105287912</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/146410014">https://zhuanlan.zhihu.com/p/146410014</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/403361038">https://zhuanlan.zhihu.com/p/403361038</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.wm-team.cn/index.php/archives/75/#D3_car+1">https://blog.wm-team.cn/index.php/archives/75/#D3_car+1</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/still-smile/p/12022080.html">https://www.cnblogs.com/still-smile/p/12022080.html</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://xiananren.github.io">Xman</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://xiananren.github.io/2024/04/30/D3ctf-D3car%E5%A4%8D%E7%8E%B0/">https://xiananren.github.io/2024/04/30/D3ctf-D3car%E5%A4%8D%E7%8E%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://xiananren.github.io" target="_blank">Xman</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430224550206.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/04/29/240428/" title="24/04/28"><img class="cover" src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240429115555991.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">24/04/28</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://pic.imgdb.cn/item/63f38a68f144a010071d33b2.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Xman</div><div class="author-info__description">深大信安Aurora/国际战队r3kapig逆向手，擅长坐牢</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">live a life</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">相关知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#mqtt"><span class="toc-number">1.1.</span> <span class="toc-text">mqtt</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E8%BF%B0"><span class="toc-number">1.1.1.</span> <span class="toc-text">简述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.2.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.3.</span> <span class="toc-text">工作流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UDS"><span class="toc-number">1.2.</span> <span class="toc-text">UDS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#frp"><span class="toc-number">1.3.</span> <span class="toc-text">frp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.1.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.2.</span> <span class="toc-text">工作原理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%87%AA%E5%B7%B1%E5%81%9A%E7%9A%84"><span class="toc-number">2.</span> <span class="toc-text">自己做的</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#flag1"><span class="toc-number">2.1.</span> <span class="toc-text">flag1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#flag2-%E6%9C%AA%E5%AE%8C%E6%88%90"><span class="toc-number">2.2.</span> <span class="toc-text">flag2-未完成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%92%8C%E4%BB%A3%E7%90%86%E4%BA%A4%E4%BA%92"><span class="toc-number">2.2.1.</span> <span class="toc-text">和代理交互</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E6%95%B0%E6%8D%AE"><span class="toc-number">2.2.2.</span> <span class="toc-text">构造数据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%85%E5%86%85%E5%A4%8D%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">颅内复现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#flag2"><span class="toc-number">3.1.</span> <span class="toc-text">flag2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#flag3"><span class="toc-number">3.2.</span> <span class="toc-text">flag3</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/04/30/D3ctf-D3car%E5%A4%8D%E7%8E%B0/" title="车联网入门第一题--D3ctf-d3car"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240430224550206.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="车联网入门第一题--D3ctf-d3car"/></a><div class="content"><a class="title" href="/2024/04/30/D3ctf-D3car%E5%A4%8D%E7%8E%B0/" title="车联网入门第一题--D3ctf-d3car">车联网入门第一题--D3ctf-d3car</a><time datetime="2024-04-30T06:02:57.251Z" title="发表于 2024-04-30 14:02:57">2024-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/29/240428/" title="24/04/28"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240429115555991.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="24/04/28"/></a><div class="content"><a class="title" href="/2024/04/29/240428/" title="24/04/28">24/04/28</a><time datetime="2024-04-29T03:40:38.718Z" title="发表于 2024-04-29 11:40:38">2024-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/23/240423/" title="24/04/23"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240423225916544.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="24/04/23"/></a><div class="content"><a class="title" href="/2024/04/23/240423/" title="24/04/23">24/04/23</a><time datetime="2024-04-23T14:24:01.025Z" title="发表于 2024-04-23 22:24:01">2024-04-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/19/240419/" title="24/04/19"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240419223347035.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="24/04/19"/></a><div class="content"><a class="title" href="/2024/04/19/240419/" title="24/04/19">24/04/19</a><time datetime="2024-04-19T14:32:16.237Z" title="发表于 2024-04-19 22:32:16">2024-04-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/18/miasm%E5%AD%A6%E4%B9%A0%E3%80%902%E3%80%91--%E5%8A%A8%E6%80%81%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/" title="miasm学习【2】--动态符号执行"><img src="https://xiananren-1308648057.cos.ap-guangzhou.myqcloud.com/image-20240418202703334.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="miasm学习【2】--动态符号执行"/></a><div class="content"><a class="title" href="/2024/04/18/miasm%E5%AD%A6%E4%B9%A0%E3%80%902%E3%80%91--%E5%8A%A8%E6%80%81%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/" title="miasm学习【2】--动态符号执行">miasm学习【2】--动态符号执行</a><time datetime="2024-04-18T08:19:37.059Z" title="发表于 2024-04-18 16:19:37">2024-04-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Xman</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
