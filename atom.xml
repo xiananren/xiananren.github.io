@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2024-05-16T04:05:28.044Z</updated>
+  <updated>2024-08-23T17:46:04.254Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -17,11 +17,34 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>UEFI固件漏洞学习</title>
+    <link href="https://xiananren.github.io/2024/08/23/UEFI%E5%9B%BA%E4%BB%B6%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/"/>
+    <id>https://xiananren.github.io/2024/08/23/UEFI%E5%9B%BA%E4%BB%B6%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/</id>
+    <published>2024-08-23T01:38:52.046Z</published>
+    <updated>2024-08-23T17:46:04.254Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="固件漏洞" scheme="https://xiananren.github.io/categories/%E5%9B%BA%E4%BB%B6%E6%BC%8F%E6%B4%9E/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title>内核pwn刷题笔记</title>
     <link href="https://xiananren.github.io/2024/05/16/%E5%86%85%E6%A0%B8pwn%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/"/>
     <id>https://xiananren.github.io/2024/05/16/%E5%86%85%E6%A0%B8pwn%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/</id>
     <published>2024-05-15T17:12:13.852Z</published>
-    <updated>2024-05-16T04:05:28.044Z</updated>
+    <updated>2024-08-18T08:59:32.342Z</updated>
     
     
       
@@ -389,7 +412,7 @@
     <link href="https://xiananren.github.io/2023/08/30/frida/"/>
     <id>https://xiananren.github.io/2023/08/30/frida/</id>
     <published>2023-08-30T08:05:44.528Z</published>
-    <updated>2023-12-13T07:38:06.240Z</updated>
+    <updated>2024-07-29T16:06:23.343Z</updated>
     
     
       
@@ -436,29 +459,6 @@
     <id>https://xiananren.github.io/2023/02/22/IdaPython/</id>
     <published>2023-02-22T02:49:07.956Z</published>
     <updated>2023-03-06T13:56:41.462Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html"></summary>
-        
-      
-    
-    
-    
-    <category term="逆向学习" scheme="https://xiananren.github.io/categories/%E9%80%86%E5%90%91%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>c++ STL函数分析</title>
-    <link href="https://xiananren.github.io/2023/02/22/c++%20STL%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90/"/>
-    <id>https://xiananren.github.io/2023/02/22/c++%20STL%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90/</id>
-    <published>2023-02-22T02:45:42.085Z</published>
-    <updated>2023-03-06T13:55:47.366Z</updated>
     
     
       
