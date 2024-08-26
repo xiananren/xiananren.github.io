@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2024-08-24T12:48:49.667Z</updated>
+  <updated>2024-08-26T14:22:57.765Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -17,11 +17,34 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>UEFI SMM题目训练</title>
+    <link href="https://xiananren.github.io/2024/08/26/UEFI%20SMM%E9%A2%98%E7%9B%AE%E8%AE%AD%E7%BB%83/"/>
+    <id>https://xiananren.github.io/2024/08/26/UEFI%20SMM%E9%A2%98%E7%9B%AE%E8%AE%AD%E7%BB%83/</id>
+    <published>2024-08-26T08:43:13.355Z</published>
+    <updated>2024-08-26T14:22:57.765Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="固件漏洞" scheme="https://xiananren.github.io/categories/%E5%9B%BA%E4%BB%B6%E6%BC%8F%E6%B4%9E/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title>UEFI固件漏洞学习</title>
     <link href="https://xiananren.github.io/2024/08/23/UEFI%E5%9B%BA%E4%BB%B6%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/"/>
     <id>https://xiananren.github.io/2024/08/23/UEFI%E5%9B%BA%E4%BB%B6%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/</id>
     <published>2024-08-23T01:38:52.046Z</published>
-    <updated>2024-08-24T12:48:49.667Z</updated>
+    <updated>2024-08-26T08:41:53.667Z</updated>
     
     
       
@@ -449,29 +472,6 @@
     
     
     <category term="游戏安全" scheme="https://xiananren.github.io/categories/%E6%B8%B8%E6%88%8F%E5%AE%89%E5%85%A8/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>idapython函数学习笔记</title>
-    <link href="https://xiananren.github.io/2023/02/22/IdaPython/"/>
-    <id>https://xiananren.github.io/2023/02/22/IdaPython/</id>
-    <published>2023-02-22T02:49:07.956Z</published>
-    <updated>2023-03-06T13:56:41.462Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html"></summary>
-        
-      
-    
-    
-    
-    <category term="逆向学习" scheme="https://xiananren.github.io/categories/%E9%80%86%E5%90%91%E5%AD%A6%E4%B9%A0/"/>
     
     
   </entry>
