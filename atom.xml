@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2024-10-13T10:25:47.931Z</updated>
+  <updated>2024-11-17T14:54:27.687Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -15,6 +15,52 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>poc2024-Two ways of Rooting All Qualcomm based Android phones分析</title>
+    <link href="https://xiananren.github.io/2024/11/17/poc2024-Two%20ways%20of%20Rooting%20All%20Qualcomm%20based%20Android%20phones%E5%88%86%E6%9E%90/"/>
+    <id>https://xiananren.github.io/2024/11/17/poc2024-Two%20ways%20of%20Rooting%20All%20Qualcomm%20based%20Android%20phones%E5%88%86%E6%9E%90/</id>
+    <published>2024-11-17T14:42:47.084Z</published>
+    <updated>2024-11-17T14:54:27.687Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="论文分析" scheme="https://xiananren.github.io/categories/%E8%AE%BA%E6%96%87%E5%88%86%E6%9E%90/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>linux0.11阅读记录</title>
+    <link href="https://xiananren.github.io/2024/10/27/linux0.11%E9%98%85%E8%AF%BB%E8%AE%B0%E5%BD%95/"/>
+    <id>https://xiananren.github.io/2024/10/27/linux0.11%E9%98%85%E8%AF%BB%E8%AE%B0%E5%BD%95/</id>
+    <published>2024-10-27T14:45:29.955Z</published>
+    <updated>2024-11-02T07:57:12.606Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="kernel" scheme="https://xiananren.github.io/categories/kernel/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>kernel知识点记录</title>
@@ -90,7 +136,7 @@
     <link href="https://xiananren.github.io/2024/05/16/%E5%86%85%E6%A0%B8pwn%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/"/>
     <id>https://xiananren.github.io/2024/05/16/%E5%86%85%E6%A0%B8pwn%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/</id>
     <published>2024-05-15T17:12:13.852Z</published>
-    <updated>2024-10-27T08:41:07.710Z</updated>
+    <updated>2024-10-31T01:00:21.003Z</updated>
     
     
       
@@ -293,34 +339,11 @@
   </entry>
   
   <entry>
-    <title>2023年终总结</title>
-    <link href="https://xiananren.github.io/2023/12/31/2023%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
-    <id>https://xiananren.github.io/2023/12/31/2023%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</id>
-    <published>2023-12-31T04:35:55.790Z</published>
-    <updated>2023-12-31T06:49:18.138Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html"></summary>
-        
-      
-    
-    
-    
-    <category term="年终总结" scheme="https://xiananren.github.io/categories/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
-    
-    
-  </entry>
-  
-  <entry>
     <title>binary ninja vscode远程调试bn脚本</title>
     <link href="https://xiananren.github.io/2023/11/23/binary-ninja%E8%B0%83%E8%AF%95python%E8%84%9A%E6%9C%AC/"/>
     <id>https://xiananren.github.io/2023/11/23/binary-ninja%E8%B0%83%E8%AF%95python%E8%84%9A%E6%9C%AC/</id>
     <published>2023-11-23T08:58:45.154Z</published>
-    <updated>2024-03-27T14:16:10.655Z</updated>
+    <updated>2024-12-22T07:06:13.026Z</updated>
     
     
       
@@ -449,29 +472,6 @@
     
     
     <category term="工具源码分析" scheme="https://xiananren.github.io/categories/%E5%B7%A5%E5%85%B7%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>frida常见使用及脚本收集</title>
-    <link href="https://xiananren.github.io/2023/08/30/frida/"/>
-    <id>https://xiananren.github.io/2023/08/30/frida/</id>
-    <published>2023-08-30T08:05:44.528Z</published>
-    <updated>2024-07-29T16:06:23.343Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html"></summary>
-        
-      
-    
-    
-    
-    <category term="安卓逆向学习" scheme="https://xiananren.github.io/categories/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91%E5%AD%A6%E4%B9%A0/"/>
     
     
   </entry>
