@@ -6,7 +6,7 @@
   <link href="https://xiananren.github.io/atom.xml" rel="self"/>
   
   <link href="https://xiananren.github.io/"/>
-  <updated>2024-11-02T07:57:12.606Z</updated>
+  <updated>2024-10-13T10:25:47.931Z</updated>
   <id>https://xiananren.github.io/</id>
   
   <author>
@@ -15,29 +15,6 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>linux0.11阅读记录</title>
-    <link href="https://xiananren.github.io/2024/10/27/linux0.11%E9%98%85%E8%AF%BB%E8%AE%B0%E5%BD%95/"/>
-    <id>https://xiananren.github.io/2024/10/27/linux0.11%E9%98%85%E8%AF%BB%E8%AE%B0%E5%BD%95/</id>
-    <published>2024-10-27T14:45:29.955Z</published>
-    <updated>2024-11-02T07:57:12.606Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html"></summary>
-        
-      
-    
-    
-    
-    <category term="kernel" scheme="https://xiananren.github.io/categories/kernel/"/>
-    
-    
-  </entry>
   
   <entry>
     <title>kernel知识点记录</title>
@@ -472,6 +449,29 @@
     
     
     <category term="安卓逆向学习" scheme="https://xiananren.github.io/categories/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>2023腾讯游戏安全比赛总结</title>
+    <link href="https://xiananren.github.io/2023/04/19/2023%E8%85%BE%E8%AE%AF%E6%B8%B8%E6%88%8F%E5%AE%89%E5%85%A8%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/"/>
+    <id>https://xiananren.github.io/2023/04/19/2023%E8%85%BE%E8%AE%AF%E6%B8%B8%E6%88%8F%E5%AE%89%E5%85%A8%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/</id>
+    <published>2023-04-18T16:26:05.746Z</published>
+    <updated>2023-04-18T17:20:24.707Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="游戏安全" scheme="https://xiananren.github.io/categories/%E6%B8%B8%E6%88%8F%E5%AE%89%E5%85%A8/"/>
     
     
   </entry>
